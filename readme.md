@@ -1,4 +1,4 @@
-# ChatGPT with NodeJS ✉️
+# ChatGPT with NodeJS 🤖
 
 Projeto consiste em vincular a api openAI com o nodeJs
 
