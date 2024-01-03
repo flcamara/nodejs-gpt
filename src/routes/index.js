@@ -1,8 +1,8 @@
 import express from 'express'
-import sendMessage from '../controller/sendMessageController'
+import sendMessageController from '../controller/sendMessageController.js'
 
 const router = express.Router({mergeParams: true})
 
-router.use('/send', sendMessage)
+router.use('/send', sendMessageController.sendMessage)
 
 export default router

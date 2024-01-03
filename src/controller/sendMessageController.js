@@ -6,19 +6,31 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 async function sendMessage(req, res){
     try {
+
+        let optionsAnswer = 
+          [
+            {message: 'Olá como podemos te ajudar hoje?', value: 1},
+            {message: 'Você possui alguma dúvida?', value: 2},
+            {message: 'Tchau!', value: 3},
+          ]
+        
         const chatCompletion = await openai.chat.completions.create({
-          model: "gpt-3.5-turbo-0613",
+          model: "gpt-3.5-turbo-instruct-0914",
           messages: [
             {
               role: "user",
               content: `
-                       hoje estou nervoso, mas ontem estava calmo!
+                       ${req.body.message}
         
-                        Qual o meu sentimento hoje com base na frase acima? Me fale uma dica para melhorar.
+                        Com base na pergunta acima verifique qual objeto desse array que possui a mensagem ideal de resposta para essa pergunta
+                        ${optionsAnswer}
+
+                        Retorne apenas o conteudo de message
                         ###
                     `,
             },
           ],
+          max_tokens: 30
         });
     
         return res.status(200).send({
