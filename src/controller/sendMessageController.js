@@ -5,21 +5,8 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 async function sendMessage(req, res) {
   try {
-   
-    let optionsAnswer = [
-      { message: "Olá seja bem-vindo ao nosso canal de suporte. Me chamo Ana. Qual motivo do contato?", value: 1 },
-      { message: "Certo. Verifique os dados do mailing por gentileza.", value: 2 },
-      { message: "Entendi. Verifique se a fila esta ativada", value: 3 },
-      { message: "Fico feliz em saber que você conseguiu resolver! 😊 Se surgir qualquer outra dúvida ou problema no futuro, não hesite em entrar em contato. Estamos aqui para ajudar. Tenha um ótimo dia!", value: 4 },
-    ];
-
-    let optionsAnswerMessages = "";
-
-    for (let i = 0; i < optionsAnswer.length; i++) {
-      optionsAnswerMessages += optionsAnswer[i].message + "\n";
-    }
-
-    // console.log(optionsAnswerMessages)
+ 
+    let setup =  `Você é um assistente de academia. Você ira auxiliar um novo aluno e indicar treinos com base nos membros que ele desejar treinar`
 
     const chatCompletion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo-0613",
@@ -27,22 +14,21 @@ async function sendMessage(req, res) {
         {
           role: "user",
           content: `
+              ${setup}
+
               ${req.body.message}
     
-              Com base na lista de mensagens abaixo, escolha apenas uma que se encaixe melhor para a mensagem acima
-               ${optionsAnswerMessages}
-    
-              Responda apenas com a mensagem que foi escolhida
+              Responda de maneira objetiva
                ###
            `,
         },
       ],
-      max_tokens: 30,
-      stop: ['\n']
+      max_tokens: 100,
+      // stop: ['\n']
     });
 
     return res.status(200).send({
-      sucess: true,
+      success: true,
       message: chatCompletion.choices[0].message,
     });
   } catch (error) {
